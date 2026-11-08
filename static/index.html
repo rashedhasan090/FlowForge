@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Flowforge - Verified AI Procure-to-Pay</title>
+<style>
+:root{--bg:#0b1220;--panel:#131c30;--panel2:#1a2540;--line:#26335a;--tx:#e6ebf5;--mut:#8b9bbd;--acc:#4cc9f0;--ok:#34d399;--bad:#f87171;--warn:#fbbf24;--pur:#a78bfa}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--tx);display:flex;min-height:100vh}
+nav{width:220px;background:#0e1628;border-right:1px solid var(--line);padding:18px 12px;position:sticky;top:0;height:100vh;flex-shrink:0}
+.logo{font-size:20px;font-weight:800;padding:4px 10px 18px}.logo span{color:var(--acc)}.logo small{display:block;font-size:11px;color:var(--mut);font-weight:500}
+nav a{display:flex;gap:10px;align-items:center;padding:9px 12px;border-radius:9px;color:var(--mut);text-decoration:none;font-size:14px;margin-bottom:2px}
+nav a:hover{background:var(--panel)}nav a.on{background:var(--panel2);color:var(--tx)}nav .badge{margin-left:auto;background:var(--warn);color:#000;border-radius:99px;padding:0 7px;font-size:11px;font-weight:700}
+.side-foot{position:absolute;bottom:14px;left:12px;right:12px;font-size:11px;color:var(--mut)}
+main{flex:1;padding:24px 30px;max-width:1300px;min-width:0}h1{margin:0 0 4px;font-size:24px}.sub{color:var(--mut);margin-bottom:20px;font-size:14px}
+.grid{display:grid;gap:16px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g5{grid-template-columns:repeat(5,1fr)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}.card h3{margin:0 0 12px;font-size:15px}
+.kpi b{display:block;font-size:28px;color:var(--acc)}.kpi span{color:var(--mut);font-size:12px}
+button,.btn{background:var(--acc);color:#04121f;border:0;border-radius:9px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:13px;text-decoration:none;display:inline-block}
+button.s{background:var(--panel2);color:var(--tx);border:1px solid var(--line)}button.g{background:var(--ok)}button.r{background:var(--bad)}button.p{background:var(--pur)}button:disabled{opacity:.5}
+textarea,input,select{background:#0b1220;color:var(--tx);border:1px solid var(--line);border-radius:9px;padding:9px;font:inherit;width:100%}textarea{font-family:ui-monospace,monospace;font-size:13px;min-height:170px}
+table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:var(--mut);font-weight:600;padding:8px;border-bottom:1px solid var(--line)}td{padding:9px 8px;border-bottom:1px solid #1d2a4b}tr.cl{cursor:pointer}tr.cl:hover{background:var(--panel2)}
+.tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:700;background:#26335a}
+.auto_approved,.approved,.t-ok{background:#064e3b;color:#6ee7b7}.rejected,.t-bad{background:#7f1d1d;color:#fca5a5}.pending,.t-warn{background:#78350f;color:#fcd34d}.t-pur{background:#4c1d95;color:#ddd6fe}
+.flag{display:inline-block;margin:1px 3px 1px 0;padding:1px 7px;border-radius:6px;font-size:11px;background:#3b2146;color:#f0abfc}
+.bar{height:10px;background:#0b1220;border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc)}
+.step{border-left:3px solid var(--acc);padding:6px 12px;margin:8px 0;background:#0f1830;border-radius:0 8px 8px 0;font-size:13px}.step.Guard{border-color:var(--bad)}.step.Decision{border-color:var(--ok)}.step.AI\ Review{border-color:var(--pur)}.step.Notify{border-color:var(--warn)}
+.step small{color:var(--mut)}.mono{font-family:ui-monospace,monospace;font-size:12px;color:var(--mut)}
+.pg{display:none}.pg.on{display:block}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.sp{flex:1}
+.prop{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #1d2a4b;font-size:13px}.prop .ic{font-size:16px}
+.chat{height:380px;overflow:auto;background:#0b1220;border-radius:10px;padding:12px;margin-bottom:10px}.msg{margin:8px 0;padding:9px 12px;border-radius:10px;max-width:85%;white-space:pre-wrap;font-size:14px}.msg.u{background:var(--panel2);margin-left:auto}.msg.a{background:#14243f;border:1px solid var(--line)}
+.toast{position:fixed;right:20px;bottom:20px;background:var(--panel2);border:1px solid var(--acc);padding:12px 18px;border-radius:10px;display:none;z-index:9}
+.chart{display:flex;align-items:flex-end;gap:8px;height:120px}.chart div{flex:1;background:var(--acc);border-radius:5px 5px 0 0;position:relative;min-height:3px}.chart div span{position:absolute;top:-16px;width:100%;text-align:center;font-size:11px;color:var(--mut)}.chart div em{position:absolute;bottom:-18px;width:100%;text-align:center;font-size:10px;color:var(--mut);font-style:normal}
+@media(max-width:900px){nav{display:none}.g2,.g3,.g5{grid-template-columns:1fr}}
+</style></head><body>
+<nav><div class="logo">⚡ Flow<span>forge</span><small>Verified AI procure-to-pay</small></div>
+<a href="#/dashboard" data-p="dashboard">📊 Dashboard</a><a href="#/new" data-p="new">➕ New request</a><a href="#/requests" data-p="requests">📄 Requests</a>
+<a href="#/approvals" data-p="approvals">✅ Approvals <span class="badge" id="pb" style="display:none"></span></a><a href="#/policy" data-p="policy">🛡 Policy Studio</a>
+<a href="#/vendors" data-p="vendors">🏢 Vendors</a><a href="#/audit" data-p="audit">🔗 Audit ledger</a><a href="#/copilot" data-p="copilot">🤖 Copilot</a>
+<a href="/">🏠 Home page</a><div class="side-foot" id="hf">…</div></nav>
+<main>
+<section class="pg" id="p-dashboard"></section><section class="pg" id="p-new"></section><section class="pg" id="p-requests"></section><section class="pg" id="p-request"></section>
+<section class="pg" id="p-approvals"></section><section class="pg" id="p-policy"></section><section class="pg" id="p-vendors"></section><section class="pg" id="p-audit"></section><section class="pg" id="p-copilot"></section>
+</main><div class="toast" id="toast"></div>
+<script src="/static/app.js"></script></body></html>

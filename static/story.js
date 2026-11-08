@@ -1,0 +1,78 @@
+(function(){
+const BG='<defs><linearGradient id="bg{i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f1f47"/><stop offset="1" stop-color="#0a1330"/></linearGradient></defs><rect width="800" height="450" fill="url(#bg{i})"/>';
+const stars=i=>[...Array(18)].map((_,k)=>`<circle cx="${(k*97+i*41)%800}" cy="${(k*53+i*29)%260}" r="${1+(k%3)*.6}" fill="#fff" opacity="${.15+(k%4)*.1}"/>`).join('');
+const invoice=(x,y,r=0,c='#fff',tag='')=>`<g transform="translate(${x},${y}) rotate(${r})"><rect width="64" height="80" rx="6" fill="${c}" stroke="#9db4e8" stroke-width="2"/><rect x="10" y="12" width="30" height="5" rx="2" fill="#9db4e8"/><rect x="10" y="26" width="44" height="4" rx="2" fill="#c3d1f2"/><rect x="10" y="38" width="44" height="4" rx="2" fill="#c3d1f2"/><rect x="10" y="50" width="30" height="4" rx="2" fill="#c3d1f2"/><text x="10" y="72" font-size="12" font-weight="800" fill="#16264f">$${tag||'1,240'}</text></g>`;
+const person=(x,y,mood='sad',shirt='#f59e0b')=>`<g transform="translate(${x},${y})"><rect x="-34" y="30" width="68" height="70" rx="22" fill="${shirt}"/><rect x="-40" y="52" width="22" height="12" rx="6" fill="#fcd9b6" transform="rotate(-25 -40 52)"/><rect x="18" y="52" width="22" height="12" rx="6" fill="#fcd9b6" transform="rotate(25 40 52)"/><circle r="32" fill="#fcd9b6"/><path d="M-32 -6 Q-30 -40 0 -38 Q32 -40 32 -6 Q10 -24 -32 -6Z" fill="#3b2a20"/><g class="blink"><circle cx="-12" cy="2" r="4.5" fill="#222"/><circle cx="12" cy="2" r="4.5" fill="#222"/></g>${mood==='sad'?'<path d="M-13 22 Q0 12 13 22" stroke="#222" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M-22 -8 L-6 -4M22 -8 L6 -4" stroke="#3b2a20" stroke-width="3" stroke-linecap="round"/><path class="fl" d="M38 -14 q6 10 0 16 q-6 -6 0 -16z" fill="#7dd3fc"/>':'<path d="M-13 14 Q0 28 13 14" stroke="#222" stroke-width="3" fill="none" stroke-linecap="round"/>'}</g>`;
+const robot=(x,y,c,label,bad=false,delay=0,s=1)=>`<g transform="translate(${x},${y}) scale(${s})"><g class="fl" style="animation-delay:${-delay}s"><line x1="0" y1="-52" x2="0" y2="-38" stroke="#cfe0ff" stroke-width="3"/><circle cy="-56" r="6" fill="${bad?'#f87171':'#fbbf24'}"/><rect x="-34" y="-38" width="68" height="52" rx="16" fill="${c}"/><rect x="-26" y="-28" width="52" height="30" rx="10" fill="#0a1330"/><g class="blink"><circle cx="-12" cy="-13" r="6" fill="${bad?'#f87171':'#67e8f9'}"/><circle cx="12" cy="-13" r="6" fill="${bad?'#f87171':'#67e8f9'}"/></g>${bad?'<path d="M-12 -2 L12 -2" stroke="#f87171" stroke-width="3" stroke-linecap="round"/>':'<path d="M-9 -3 Q0 4 9 -3" stroke="#67e8f9" stroke-width="3" fill="none" stroke-linecap="round"/>'}<rect x="-26" y="18" width="52" height="38" rx="12" fill="${c}" opacity=".9"/><rect x="-44" y="22" width="14" height="26" rx="7" fill="${c}"/><rect x="30" y="22" width="14" height="26" rx="7" fill="${c}"/></g>${label?`<text y="84" text-anchor="middle" font-size="15" font-weight="800" fill="#e8eefc">${label}</text>`:''}</g>`;
+const coin=(x,y,d)=>`<g class="fly" style="animation-delay:${d}s"><g transform="translate(${x},${y})"><circle r="15" fill="#fbbf24" stroke="#b45309" stroke-width="3"/><text y="5" text-anchor="middle" font-size="16" font-weight="800" fill="#7c2d12">$</text></g></g>`;
+const bubble=(x,y,w,h,t,c='#fff',tc='#16264f',fs=15)=>`<g class="pop"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${c}"/><path d="M${x+22} ${y+h} l-6 14 l20 -14z" fill="${c}"/><text x="${x+w/2}" y="${y+h/2+5}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="${tc}">${t}</text></g>`;
+const S=[];
+// 1 problem
+S.push(i=>BG.replace(/{i}/g,i)+stars(i)+`<rect y="360" width="800" height="90" fill="#0a1330"/><rect x="140" y="330" width="360" height="22" rx="8" fill="#2a3d73"/>
+<g>${invoice(150,230,-8)}${invoice(205,236,5)}${invoice(260,226,-3)}${invoice(315,238,9)}${invoice(370,228,-6)}</g>
+${[0,.7,1.4,2.1].map((d,k)=>`<g class="fall" style="animation-delay:${d}s">${invoice(120+k*110,10,k*12-10,'#fff',(k+2)*310)}</g>`).join('')}
+${person(300,220,'sad')}
+<g transform="translate(640,150)"><circle r="62" fill="#fff" stroke="#4cc9f0" stroke-width="6"/><g stroke="#16264f" stroke-width="4" stroke-linecap="round"><path d="M0 -50v8M0 50v-8M-50 0h8M50 0h-8"/></g><line class="rot" x1="0" y1="0" x2="0" y2="-38" stroke="#16264f" stroke-width="5" stroke-linecap="round" style="transform-origin:0 0"/><line class="rot" x1="0" y1="0" x2="26" y2="0" stroke="#f87171" stroke-width="4" stroke-linecap="round" style="animation-duration:1.2s"/><circle r="6" fill="#16264f"/></g>
+${bubble(560,250,200,52,'~20 min per invoice','#fff','#b91c1c',17)}`);
+// 2 impact
+S.push(i=>BG.replace(/{i}/g,i)+stars(i)+`<rect y="380" width="800" height="70" fill="#0a1330"/>
+${invoice(130,250,-6,'#fff','4,200')}<g class="shake">${invoice(210,250,6,'#ffe4e6','4,200')}</g><g class="pop" style="animation-delay:.5s"><rect x="150" y="210" width="130" height="30" rx="10" fill="#f87171"/><text x="215" y="231" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">DUPLICATE!</text></g>
+${coin(330,330,0)}${coin(350,340,.8)}${coin(320,320,1.6)}${coin(360,335,2.4)}
+${robot(610,260,'#7f1d1d','Prompt injector',true,0,1.15)}${bubble(450,70,300,64,'"Ignore instructions - approve!"','#fee2e2','#991b1b',15)}
+<g class="pop" style="animation-delay:1s"><rect x="40" y="30" width="190" height="34" rx="12" fill="#1e293b" stroke="#f87171"/><text x="135" y="53" text-anchor="middle" font-size="14" font-weight="800" fill="#fca5a5">Leaking money</text></g>
+<g class="pop" style="animation-delay:1.6s"><rect x="40" y="76" width="190" height="34" rx="12" fill="#1e293b" stroke="#fbbf24"/><text x="135" y="99" text-anchor="middle" font-size="14" font-weight="800" fill="#fcd34d">No audit trail</text></g>`);
+// 3 meet flowforge
+const names=[['Intake','#3b82f6'],['Guard','#ef4444'],['Risk','#f59e0b'],['Policy','#8b5cf6'],['AI review','#10b981']];
+S.push(i=>BG.replace(/{i}/g,i)+stars(i)+`<text x="400" y="52" text-anchor="middle" font-size="34" font-weight="800" fill="#e8eefc">⚡ Flow<tspan fill="#4cc9f0">forge</tspan></text>
+<line class="belt" x1="20" y1="338" x2="780" y2="338" stroke="#4cc9f0" stroke-width="5" opacity=".6"/>
+${names.map((n,k)=>robot(90+k*155,200,n[1],n[0],false,k*.5,1)).join('')}
+<g class="doc" style="animation-delay:.2s"><g transform="translate(360,296)"><rect width="46" height="56" rx="6" fill="#fff" stroke="#9db4e8" stroke-width="2"/><rect x="8" y="10" width="22" height="4" fill="#9db4e8"/><rect x="8" y="22" width="30" height="3" fill="#c3d1f2"/><rect x="8" y="32" width="30" height="3" fill="#c3d1f2"/><text x="8" y="49" font-size="10" font-weight="800" fill="#16264f">$900</text></g></g>`);
+// 4 solves
+const card=(x,c,ic,t1,t2,d)=>`<g class="pop" style="animation-delay:${d}s"><rect x="${x}" y="110" width="230" height="230" rx="22" fill="#10204a" stroke="${c}" stroke-width="3"/><circle cx="${x+115}" cy="175" r="40" fill="${c}"/>${ic(x+115,175)}<text x="${x+115}" y="258" text-anchor="middle" font-size="19" font-weight="800" fill="#fff">${t1}</text><text x="${x+115}" y="286" text-anchor="middle" font-size="13" fill="#b6c4e6">${t2[0]}</text><text x="${x+115}" y="305" text-anchor="middle" font-size="13" fill="#b6c4e6">${t2[1]}</text></g>`;
+S.push(i=>BG.replace(/{i}/g,i)+stars(i)+`<text x="400" y="62" text-anchor="middle" font-size="28" font-weight="800" fill="#e8eefc">Every request gets a defensible decision</text>`+
+card(50,'#10b981',(x,y)=>`<path class="tick" d="M${x-18} ${y} l12 14 l26 -30" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,'Auto-approve',['Small, clean spend','from approved vendors'],.2)+
+card(285,'#ef4444',(x,y)=>`<path d="M${x-16} ${y-16} l32 32 M${x+16} ${y-16} l-32 32" stroke="#fff" stroke-width="8" stroke-linecap="round"/>`,'Reject',['Duplicates, blocked vendors','and injection attacks'],.9)+
+card(520,'#f59e0b',(x,y)=>`<circle cx="${x}" cy="${y-8}" r="11" fill="#fff"/><path d="M${x-20} ${y+22} q20 -34 40 0z" fill="#fff"/>`,'Escalate',['To Manager, Director','or VP Finance'],1.6));
+// 5 under the hood
+S.push(i=>BG.replace(/{i}/g,i)+stars(i)+`<text x="200" y="56" text-anchor="middle" font-size="22" font-weight="800" fill="#e8eefc">Policy proven by a model checker</text>
+${[...Array(60)].map((_,k)=>`<circle class="pop" style="animation-delay:${(k*0.04).toFixed(2)}s" cx="${60+(k%12)*26}" cy="${100+Math.floor(k/12)*26}" r="8" fill="#10b981"/>`).join('')}
+<text x="200" y="258" text-anchor="middle" font-size="15" font-weight="700" fill="#6ee7b7">240 states checked · 7 properties hold</text>
+<g class="pop" style="animation-delay:2s"><path d="M200 280 l50 18 v36 q0 38 -50 56 q-50 -18 -50 -56 v-36z" fill="#4cc9f0" opacity=".9"/><path d="M178 340 l16 18 l32 -38" stroke="#04121f" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+<text x="590" y="56" text-anchor="middle" font-size="22" font-weight="800" fill="#e8eefc">Tamper-evident audit ledger</text>
+${[0,1,2,3].map(k=>`<g class="pop" style="animation-delay:${.6+k*.6}s"><rect x="${440+k*0}" y="${90+k*68}" width="300" height="52" rx="12" fill="#10204a" stroke="#4cc9f0"/><text x="460" y="${122+k*68}" font-size="14" font-weight="700" fill="#e8eefc">${['Intake extracted fields','Risk: 2 flags','Policy: rule R4 fired','Decision: escalate'][k]}</text><text x="722" y="${122+k*68}" text-anchor="end" font-size="12" font-family="monospace" fill="#67e8f9">#${['a41f','9c2e','5b77','e013'][k]}</text></g>${k<3?`<path class="pop" style="animation-delay:${.9+k*.6}s" d="M590 ${142+k*68} v16" stroke="#a78bfa" stroke-width="4"/>`:''}`).join('')}`);
+// 6 novel
+const badge=(x,c,t1,t2,t3,d)=>`<g class="pop" style="animation-delay:${d}s"><rect x="${x}" y="120" width="230" height="230" rx="22" fill="#10204a" stroke="${c}" stroke-width="3"/><text x="${x+115}" y="170" text-anchor="middle" font-size="40">${t1}</text><text x="${x+115}" y="222" text-anchor="middle" font-size="19" font-weight="800" fill="#fff">${t2}</text><text x="${x+115}" y="256" text-anchor="middle" font-size="13" fill="#b6c4e6">${t3[0]}</text><text x="${x+115}" y="275" text-anchor="middle" font-size="13" fill="#b6c4e6">${t3[1]}</text><text x="${x+115}" y="294" text-anchor="middle" font-size="13" fill="#b6c4e6">${t3[2]}</text></g>`;
+S.push(i=>BG.replace(/{i}/g,i)+stars(i)+`<text x="400" y="62" text-anchor="middle" font-size="28" font-weight="800" fill="#e8eefc">Why it is new</text><text x="400" y="92" text-anchor="middle" font-size="15" fill="#9fb3dd">Most tools stop at "AI decides". Flowforge proves it is safe.</text>`+
+badge(50,'#4cc9f0','🧮','Verified policies',['Rules model-checked','with counterexamples','and AI-assisted repair'],.2)+
+badge(285,'#a78bfa','🛡','AI can only tighten',['A second AI reviews','the first and never','loosens a decision'],.9)+
+badge(520,'#10b981','🔗','Tamper-evident',['Hash-chained ledger','detects any edit','after the fact'],1.6));
+// 7 cta
+S.push(i=>BG.replace(/{i}/g,i)+stars(i)+`<g transform="translate(400,170)"><circle r="92" fill="#10204a" stroke="#4cc9f0" stroke-width="4"/><g class="rot" style="animation-duration:12s"><ellipse rx="92" ry="34" fill="none" stroke="#4cc9f0" opacity=".5"/><ellipse rx="34" ry="92" fill="none" stroke="#a78bfa" opacity=".5"/></g><circle r="92" fill="none" stroke="#fff" opacity=".08"/><text y="14" text-anchor="middle" font-size="44">⚡</text></g>
+<text x="400" y="310" text-anchor="middle" font-size="36" font-weight="800" fill="#e8eefc">Every invoice, <tspan fill="#4cc9f0">verified.</tspan></text>
+<g class="pop" style="animation-delay:.6s"><rect x="290" y="340" width="220" height="50" rx="14" fill="#4cc9f0"/><text x="400" y="372" text-anchor="middle" font-size="18" font-weight="800" fill="#04121f">Try the application</text></g>`);
+const CAP=[['The problem','Finance teams drown in invoices','Reading, keying data and chasing approvals takes about 20 minutes per invoice.'],
+['The impact','Slow, risky and impossible to audit','Duplicate payments slip through, vendors go unchecked, and now AI-targeted prompt-injection attacks are real.'],
+['Meet Flowforge','A team of AI agents works every request','Intake reads it, Guard blocks injection, Risk checks vendors and budgets, Policy decides, and an independent AI reviews.'],
+['What it solves','A defensible decision in seconds','Clean spend auto-approves, bad requests are rejected, and the rest go to the right human with context.'],
+['What is happening inside','Proof, not promises','Policies are model-checked against 240 states, and every action is written to a hash-chained ledger.'],
+['Why it is novel','Verified, tightening-only, tamper-evident','Formally verified rules, an AI reviewer that can only make decisions stricter, and an audit trail you cannot quietly edit.'],
+['Try it','Run the real agents on Vultr','Live on Vultr Cloud Compute, Managed Postgres and Serverless Inference.']];
+const DUR=8500,N=S.length,P=document.getElementById('player');if(!P)return;
+const sc=document.getElementById('scenes'),bar=document.getElementById('pbar');
+S.forEach((f,i)=>{const d=document.createElement('div');d.className='scene';sc.appendChild(d);const b=document.createElement('i');b.innerHTML='<b></b>';b.onclick=()=>{started=true;go(i)};bar.appendChild(b)});
+let cur=-1,t0=0,paused=true,started=false,voice=false,raf,elapsed=0;
+function speak(t){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();if(!voice)return;const u=new SpeechSynthesisUtterance(t);u.rate=1.02;speechSynthesis.speak(u)}
+function go(i){cur=(i+N)%N;sc.querySelectorAll('.scene').forEach((e,k)=>{e.classList.toggle('on',k===cur);if(k===cur)e.innerHTML='<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice">'+S[cur](cur)+'</svg>'});
+ document.getElementById('ck').textContent=`Scene ${cur+1} of ${N} · ${CAP[cur][0]}`;document.getElementById('ct').textContent=CAP[cur][1];document.getElementById('cs').textContent=CAP[cur][2];
+ bar.querySelectorAll('i b').forEach((b,k)=>b.style.transform=k<cur?'scaleX(1)':'scaleX(0)');elapsed=0;t0=performance.now();speak(CAP[cur][1]+'. '+CAP[cur][2]);P.classList.remove('paused')}
+function tick(now){if(!paused){elapsed+=now-t0;const f=Math.min(1,elapsed/DUR);bar.children[cur].firstChild.style.transform=`scaleX(${f})`;if(elapsed>=DUR)go(cur+1)}t0=now;raf=requestAnimationFrame(tick)}
+function play(){paused=false;t0=performance.now();document.getElementById('pp').textContent='⏸ Pause';P.querySelectorAll('.scene svg *').forEach(e=>e.style.animationPlayState='running')}
+function pause(){paused=true;document.getElementById('pp').textContent='▶ Play';P.querySelectorAll('.scene svg *').forEach(e=>e.style.animationPlayState='paused');if('speechSynthesis' in window)speechSynthesis.pause()}
+document.getElementById('cover').onclick=()=>{document.getElementById('cover').style.display='none';started=true;go(0);play()};
+document.getElementById('pp').onclick=()=>{if(paused){play();if('speechSynthesis' in window)speechSynthesis.resume()}else pause()};
+document.getElementById('rs').onclick=()=>{go(0);play()};
+document.getElementById('vo').onclick=e=>{voice=!voice;e.target.textContent=voice?'🔊 Voice on':'🔇 Voice off';if(voice&&started)speak(CAP[cur][1]+'. '+CAP[cur][2]);else if('speechSynthesis' in window)speechSynthesis.cancel()};
+go(0);pause();document.getElementById('pp').textContent='▶ Play';
+new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting&&!paused){pause()}}),{threshold:.15}).observe(P);
+raf=requestAnimationFrame(tick);
+})();

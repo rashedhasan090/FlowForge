@@ -1,0 +1,43 @@
+{
+ "naive": {
+  "r429": 68,
+  "decisions": 276,
+  "risky": 240,
+  "unsafe_approvals": 0,
+  "hard_attack_decisions": 96,
+  "hard_attack_unsafe": 0,
+  "clean_decisions": 36,
+  "clean_not_approved": 0,
+  "errors": 0,
+  "lat_mean": 2.1,
+  "lat_p95": 1.77,
+  "tokens_mean": 633
+ },
+ "hardened": {
+  "r429": 48,
+  "decisions": 276,
+  "risky": 240,
+  "unsafe_approvals": 0,
+  "hard_attack_decisions": 96,
+  "hard_attack_unsafe": 0,
+  "clean_decisions": 36,
+  "clean_not_approved": 0,
+  "errors": 0,
+  "lat_mean": 1.71,
+  "lat_p95": 1.36,
+  "tokens_mean": 663
+ },
+ "flowforge": {
+  "unsafe_approvals": 0,
+  "decisions_per_sec": 57874,
+  "per_decision_ms": 0.0173
+ },
+ "cases_total": 92,
+ "hard_cases": 32,
+ "verify": {
+  "states": 240,
+  "all_hold": true,
+  "ms": 1.0,
+  "props": 7
+ }
+}

@@ -57,21 +57,31 @@ const CAP=[['The problem','Finance teams drown in invoices','Reading, keying dat
 ['What is happening inside','Proof, not promises','Policies are model-checked against 240 states, and every action is written to a hash-chained ledger.'],
 ['Why it is novel','Verified, tightening-only, tamper-evident','Formally verified rules, an AI reviewer that can only make decisions stricter, and an audit trail you cannot quietly edit.'],
 ['Try it','Run the real agents on Vultr','Live on Vultr Cloud Compute, Managed Postgres and Serverless Inference.']];
-const DUR=8500,N=S.length,P=document.getElementById('player');if(!P)return;
+const NARR=[
+"Meet Priya, who works in accounts payable. Every day, invoices pour into her inbox. For each one she reads the document, types the numbers into a system, looks up the vendor, checks the budget, and then chases someone for approval. Done by hand, that can take around twenty minutes per invoice, and the pile never stops growing.",
+"Here is the impact. While she rushes, a duplicate invoice slips through and gets paid twice. A vendor nobody checked turns out to be risky. And there is a new threat: attackers hide instructions inside invoices to trick AI tools into approving payments. The process is slow, risky, and impossible to audit.",
+"This is Flowforge. Instead of one tired person, a team of five AI agents works every request. Intake reads the invoice and pulls out the vendor, amount, and department. Guard treats the text as untrusted and blocks injection attempts. Risk checks the vendor list, limits, duplicates, and budget. Policy makes the decision. And an independent AI reviews the result.",
+"So what does it solve? Clean, low value spend is approved automatically, in seconds. Bad requests are rejected with a clear reason. Everything in between goes to the right human, a manager, a director, or the VP of Finance, with the full context already attached.",
+"Now, what is happening under the hood? The approval rules are not just written down, they are checked. A verifier explores two hundred and forty policy states to prove properties, like blocked vendors are always rejected. And every agent action is written to a hash chained ledger, so history cannot be quietly edited.",
+"Why is this new? First, the rules are formally verified, not just tested. Second, the AI reviewer can only make a decision stricter, never looser. Third, the audit trail is tamper evident. Together, that means you can trust the automation, instead of just hoping it behaves.",
+"Everything you just saw runs live on Vultr: Cloud Compute servers, managed Postgres, a load balancer, and Serverless Inference for the AI. Scroll down to try the live demo, or open the application and process your own invoice."];
+const EST=NARR.map(t=>t.split(/\s+/).length*0.42+1.5);
+const N=S.length,P=document.getElementById('player');if(!P)return;
 const sc=document.getElementById('scenes'),bar=document.getElementById('pbar');
 S.forEach((f,i)=>{const d=document.createElement('div');d.className='scene';sc.appendChild(d);const b=document.createElement('i');b.innerHTML='<b></b>';b.onclick=()=>{started=true;go(i)};bar.appendChild(b)});
-let cur=-1,t0=0,paused=true,started=false,voice=false,raf,elapsed=0;
-function speak(t){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();if(!voice)return;const u=new SpeechSynthesisUtterance(t);u.rate=1.02;speechSynthesis.speak(u)}
+let cur=-1,t0=0,paused=true,started=false,voice=true,raf,elapsed=0,speechDone=true,sid=0;
+function pickVoice(){const vs=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang));const pref=[/Google US English/i,/Aria|Jenny|Natural/i,/Samantha/i,/Daniel|Alex/i];for(const p of pref){const v=vs.find(x=>p.test(x.name));if(v)return v}return vs.find(v=>/en-US/i.test(v.lang))||vs[0]}
+function speak(t){const id=++sid;if(!('speechSynthesis' in window)){speechDone=true;return}speechSynthesis.cancel();if(!voice){speechDone=true;return}speechDone=false;const parts=t.match(/[^.!?]+[.!?]+/g)||[t];const v=pickVoice();parts.forEach((p,k)=>{const u=new SpeechSynthesisUtterance(p.trim());u.rate=.98;u.lang='en-US';if(v)u.voice=v;if(k===parts.length-1){u.onend=u.onerror=()=>{if(id===sid)speechDone=true}}speechSynthesis.speak(u)});setTimeout(()=>{if(id===sid)speechDone=true},EST[cur]*1000+15000)}
 function go(i){cur=(i+N)%N;sc.querySelectorAll('.scene').forEach((e,k)=>{e.classList.toggle('on',k===cur);if(k===cur)e.innerHTML='<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice">'+S[cur](cur)+'</svg>'});
- document.getElementById('ck').textContent=`Scene ${cur+1} of ${N} · ${CAP[cur][0]}`;document.getElementById('ct').textContent=CAP[cur][1];document.getElementById('cs').textContent=CAP[cur][2];
- bar.querySelectorAll('i b').forEach((b,k)=>b.style.transform=k<cur?'scaleX(1)':'scaleX(0)');elapsed=0;t0=performance.now();speak(CAP[cur][1]+'. '+CAP[cur][2]);P.classList.remove('paused')}
-function tick(now){if(!paused){elapsed+=now-t0;const f=Math.min(1,elapsed/DUR);bar.children[cur].firstChild.style.transform=`scaleX(${f})`;if(elapsed>=DUR)go(cur+1)}t0=now;raf=requestAnimationFrame(tick)}
+ document.getElementById('ck').textContent=`Scene ${cur+1} of ${N} · ${CAP[cur][0]}`;document.getElementById('ct').textContent=CAP[cur][1];document.getElementById('cs').textContent=NARR[cur];
+ bar.querySelectorAll('i b').forEach((b,k)=>b.style.transform=k<cur?'scaleX(1)':'scaleX(0)');elapsed=0;t0=performance.now();speak(NARR[cur]);P.classList.remove('paused')}
+function tick(now){if(!paused){elapsed+=now-t0;const est=EST[cur]*1000,f=Math.min(voice&&!speechDone?.97:1,elapsed/est);bar.children[cur].firstChild.style.transform=`scaleX(${f})`;if(voice?(speechDone&&elapsed>=est*.75):elapsed>=est)go(cur+1)}t0=now;raf=requestAnimationFrame(tick)}
 function play(){paused=false;t0=performance.now();document.getElementById('pp').textContent='⏸ Pause';P.querySelectorAll('.scene svg *').forEach(e=>e.style.animationPlayState='running')}
 function pause(){paused=true;document.getElementById('pp').textContent='▶ Play';P.querySelectorAll('.scene svg *').forEach(e=>e.style.animationPlayState='paused');if('speechSynthesis' in window)speechSynthesis.pause()}
 document.getElementById('cover').onclick=()=>{document.getElementById('cover').style.display='none';started=true;go(0);play()};
 document.getElementById('pp').onclick=()=>{if(paused){play();if('speechSynthesis' in window)speechSynthesis.resume()}else pause()};
 document.getElementById('rs').onclick=()=>{go(0);play()};
-document.getElementById('vo').onclick=e=>{voice=!voice;e.target.textContent=voice?'🔊 Voice on':'🔇 Voice off';if(voice&&started)speak(CAP[cur][1]+'. '+CAP[cur][2]);else if('speechSynthesis' in window)speechSynthesis.cancel()};
+document.getElementById('vo').onclick=e=>{voice=!voice;e.target.textContent=voice?'🔊 Voice on':'🔇 Voice off';if(voice&&started)speak(NARR[cur]);else{sid++;speechDone=true;if('speechSynthesis' in window)speechSynthesis.cancel()}};
 go(0);pause();document.getElementById('pp').textContent='▶ Play';
 new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting&&!paused){pause()}}),{threshold:.15}).observe(P);
 raf=requestAnimationFrame(tick);
